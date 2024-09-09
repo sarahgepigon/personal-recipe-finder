@@ -35,7 +35,7 @@ def get_all_ingredients_from_db():
 
     ingredient_set = set()
     for row in rows:
-        ingredients = json.loads(row[0])
+        ingredients = json.loads(row[0])  # Parse JSON from the database
         for ingredient, details in ingredients.items():
             ingredient_set.add(f"{ingredient}: {details['amount']}")
 
@@ -53,8 +53,9 @@ def filter_recipes_by_ingredients(selected_ingredients):
 
     for recipe in recipes:
         recipe_name, recipe_ingredients, recipe_steps = recipe
-        recipe_ingredients = json.loads(recipe_ingredients)
-        
+        recipe_ingredients = json.loads(recipe_ingredients)  # Parse JSON ingredients
+        recipe_steps = json.loads(recipe_steps)  # Parse JSON steps
+
         # Create a set of ingredients in the recipe
         recipe_ingredient_set = {f"{ingredient}: {details['amount']}" for ingredient, details in recipe_ingredients.items()}
         
@@ -63,7 +64,7 @@ def filter_recipes_by_ingredients(selected_ingredients):
             matching_recipes.append({
                 "recipe_name": recipe_name,
                 "recipe_ingredients_amounts": recipe_ingredients,
-                "recipe_steps": json.loads(recipe_steps)
+                "recipe_steps": recipe_steps  # Send steps back as part of the recipe data
             })
 
     return matching_recipes

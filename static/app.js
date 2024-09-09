@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         stepsList.appendChild(stepItem);
                     }
 
+                    console.log(recipe.recipe_steps);  // Check if steps are correctly parsed
+
                     // Append all elements to the recipe card
                     recipeCard.appendChild(recipeName);
                     recipeCard.appendChild(ingredientsTitle);
