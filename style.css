@@ -19,3 +19,17 @@ input[type="checkbox"] {
 #submit-button:hover {
   background-color: #2563eb;
 }
+
+/* Recipe card styling */
+.recipe-card {
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.2s ease;
+}
+
+.recipe-card:hover {
+  transform: scale(1.03);
+}
