@@ -1,72 +1,51 @@
-// Sample ingredient data (for v2 I will fetch this from app.py (databased logic) instead)
-const ingredientsList = [
-    { name: 'Green Pepper', amount: '1/4 cup' },
-    { name: 'Onion', amount: '1/2 cup' },
-    { name: 'Garlic', amount: '2 cloves' },
-    { name: 'Tomato', amount: '1 cup' }
-  ];
-  
-  // Function to populate the multi-select dropdown
-  function populateIngredientDropdown() {
-    const ingredientSelect = document.getElementById('ingredients');
-    
-    ingredientsList.forEach(ingredient => {
-      const option = document.createElement('option');
-      option.value = JSON.stringify(ingredient); // Store as JSON string
-      option.textContent = `${ingredient.name}, ${ingredient.amount}`;
-      ingredientSelect.appendChild(option);
-    });
-  }
-  
-  // Function to handle recipe search on button click
-  async function handleSearch() {
-    const ingredientSelect = document.getElementById('ingredients');
-    const selectedOptions = Array.from(ingredientSelect.selectedOptions);
-    
-    // Get the selected ingredients and amounts
-    const selectedIngredients = selectedOptions.map(option => JSON.parse(option.value));
-  
-    // Send the selected ingredients to the backend
-    const response = await fetch('/api/search-recipes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ ingredients: selectedIngredients })
-    });
-  
-    const recipes = await response.json();
-    displayRecipes(recipes);
-  }
-  
-  // Function to display recipe results
-  function displayRecipes(recipes) {
-    const recipeResultsDiv = document.getElementById('recipe-results');
-    recipeResultsDiv.innerHTML = ''; // Clear previous results
-  
-    recipes.forEach(recipe => {
-      const recipeDiv = document.createElement('div');
-      recipeDiv.classList.add('recipe');
-  
-      const recipeName = document.createElement('h3');
-      recipeName.textContent = recipe.recipe_name;
-  
-      const recipeIngredients = document.createElement('p');
-      recipeIngredients.textContent = `Ingredients: ${JSON.stringify(recipe.recipe_ingredients_amounts)}`;
-  
-      const recipeSteps = document.createElement('p');
-      recipeSteps.textContent = `Steps: ${JSON.stringify(recipe.recipe_steps)}`;
-  
-      recipeDiv.appendChild(recipeName);
-      recipeDiv.appendChild(recipeIngredients);
-      recipeDiv.appendChild(recipeSteps);
-  
-      recipeResultsDiv.appendChild(recipeDiv);
-    });
-  }
-  
-  // Event listeners
-  document.getElementById('search-button').addEventListener('click', handleSearch);
-  
-  // Populate dropdown when the page loads
-  populateIngredientDropdown();
+document.addEventListener("DOMContentLoaded", function() {
+    // Fetch all recipes from the backend
+    fetch('/recipes')
+        .then(response => response.json())
+        .then(data => {
+            const recipeContainer = document.getElementById('recipe-container');
+            
+            // Iterate over each recipe and add it to the HTML
+            data.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.classList.add('recipe-card', 'p-4', 'm-4', 'border', 'rounded-lg', 'shadow-lg');
+
+                const recipeName = document.createElement('h2');
+                recipeName.textContent = recipe.recipe_name;
+                recipeName.classList.add('text-xl', 'font-bold', 'mb-2');
+
+                const ingredientsTitle = document.createElement('h3');
+                ingredientsTitle.textContent = "Ingredients:";
+                ingredientsTitle.classList.add('text-lg', 'font-semibold', 'mt-2', 'mb-1');
+
+                const ingredientsList = document.createElement('ul');
+                for (let [ingredient, details] of Object.entries(recipe.recipe_ingredients_amounts)) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${ingredient}: ${details.amount} (Required: ${details.required ? 'Yes' : 'No'})`;
+                    ingredientsList.appendChild(listItem);
+                }
+
+                const stepsTitle = document.createElement('h3');
+                stepsTitle.textContent = "Steps:";
+                stepsTitle.classList.add('text-lg', 'font-semibold', 'mt-2', 'mb-1');
+
+                const stepsList = document.createElement('ol');
+                for (let [stepNum, stepText] of Object.entries(recipe.recipe_steps)) {
+                    const stepItem = document.createElement('li');
+                    stepItem.textContent = `${stepNum}: ${stepText}`;
+                    stepsList.appendChild(stepItem);
+                }
+
+                // Append all elements to the recipe card
+                recipeCard.appendChild(recipeName);
+                recipeCard.appendChild(ingredientsTitle);
+                recipeCard.appendChild(ingredientsList);
+                recipeCard.appendChild(stepsTitle);
+                recipeCard.appendChild(stepsList);
+
+                // Append the card to the main container
+                recipeContainer.appendChild(recipeCard);
+            });
+        })
+        .catch(error => console.error('Error fetching recipes:', error));
+});

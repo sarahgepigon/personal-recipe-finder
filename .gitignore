@@ -1,0 +1,9 @@
+venv/ # Ignore Python virtual environment
+*.db # 	Database files like .db files can change frequently, and they tend to be binary files, which don't work well with Git's diff and merge functionality. Instead of tracking the .db file, you can track the schema and code that generates the database (database_setup.py), making it easier to collaborate and keep the repository lightweight.
+.DS_Store
+.env
+.env.development
+.env.production
+app copy.js
+app copy.py
+helpful_code_snippets.py
