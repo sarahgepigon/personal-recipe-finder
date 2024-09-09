@@ -88,13 +88,22 @@ document.addEventListener("DOMContentLoaded", function() {
                         stepsList.appendChild(stepItem);
                     }
 
-                    console.log(recipe.recipe_steps);  // Check if steps are correctly parsed
+                    // Create a counter for selected ingredients
+                    const totalIngredients = Object.keys(recipe.recipe_ingredients_amounts).length;
+                    const matchedIngredients = selectedIngredients.filter(ing => Object.keys(recipe.recipe_ingredients_amounts).includes(ing.split(':')[0])).length;
+                    const counterText = `${matchedIngredients} out of ${totalIngredients} ingredients selected`;
+
+                    const counterDiv = document.createElement('div');
+                    counterDiv.classList.add('text-sm', 'text-green-500', 'mt-2');
+                    counterDiv.textContent = counterText;
 
                     // Append all elements to the recipe card
                     recipeCard.appendChild(recipeName);
                     recipeCard.appendChild(ingredientsTitle);
                     recipeCard.appendChild(ingredientsList);
                     recipeCard.appendChild(stepsTitle);
+                    recipeCard.appendChild(stepsList);
+                    recipeCard.appendChild(counterDiv);  // Add the counter to the recipe card
 
                     // Append the card to the main container
                     recipeContainer.appendChild(recipeCard);
