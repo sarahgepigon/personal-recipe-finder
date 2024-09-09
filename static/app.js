@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        // Fetch filtered recipes based on selected ingredients
+        // Fetch filtered and ranked recipes based on selected ingredients
         fetch(`/recipes?ingredients=${encodeURIComponent(selectedIngredients.join(','))}`)
             .then(response => response.json())
             .then(data => {
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
                 }
 
-                // Display each recipe
+                // Display each recipe with ranking
                 data.forEach(recipe => {
                     const recipeCard = document.createElement('div');
                     recipeCard.classList.add('recipe-card', 'p-4', 'm-4', 'border', 'rounded-lg', 'shadow-lg');
@@ -89,9 +89,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
 
                     // Create a counter for selected ingredients
-                    const totalIngredients = Object.keys(recipe.recipe_ingredients_amounts).length;
-                    const matchedIngredients = selectedIngredients.filter(ing => Object.keys(recipe.recipe_ingredients_amounts).includes(ing.split(':')[0])).length;
-                    const counterText = `${matchedIngredients} out of ${totalIngredients} ingredients selected`;
+                    const totalIngredients = recipe.total_ingredients;
+                    const matchedIngredients = recipe.num_matched;
+                    const counterText = `${matchedIngredients} out of ${totalIngredients} ingredients matched`;
 
                     const counterDiv = document.createElement('div');
                     counterDiv.classList.add('text-sm', 'text-green-500', 'mt-2');

@@ -15,15 +15,15 @@ def ingredients():
     ingredients = get_all_ingredients_from_db()
     return jsonify(ingredients)
 
-# Recipes API route - filter recipes by ingredients
+# Recipes API route - rank recipes based on matching ingredients
 @app.route('/recipes', methods=['GET'])
 def recipes():
     ingredients_query = request.args.get('ingredients', '')
     selected_ingredients = [ing.strip() for ing in ingredients_query.split(',')]
 
-    # Filter recipes based on the selected ingredients
-    filtered_recipes = filter_recipes_by_ingredients(selected_ingredients)
-    return jsonify(filtered_recipes)
+    # Filter and rank recipes based on the selected ingredients
+    ranked_recipes = rank_recipes_by_ingredients(selected_ingredients)
+    return jsonify(ranked_recipes)
 
 # Function to fetch all unique ingredients from the database
 def get_all_ingredients_from_db():
@@ -41,15 +41,15 @@ def get_all_ingredients_from_db():
 
     return list(ingredient_set)
 
-# Function to filter recipes based on selected ingredients
-def filter_recipes_by_ingredients(selected_ingredients):
+# Function to rank recipes based on the number of matched ingredients
+def rank_recipes_by_ingredients(selected_ingredients):
     conn = sqlite3.connect('recipe_finder.db')
     cursor = conn.cursor()
     cursor.execute("SELECT recipe_name, recipe_ingredients_amounts, recipe_steps FROM recipes")
     recipes = cursor.fetchall()
     conn.close()
 
-    matching_recipes = []
+    ranked_recipes = []
 
     for recipe in recipes:
         recipe_name, recipe_ingredients, recipe_steps = recipe
@@ -58,16 +58,26 @@ def filter_recipes_by_ingredients(selected_ingredients):
 
         # Create a set of ingredients in the recipe
         recipe_ingredient_set = {f"{ingredient}: {details['amount']}" for ingredient, details in recipe_ingredients.items()}
-        
-        # Check if all selected ingredients are present in the recipe's ingredients
-        if all(ingredient in recipe_ingredient_set for ingredient in selected_ingredients):
-            matching_recipes.append({
+
+        # Count how many selected ingredients match the recipe
+        matched_ingredients = [ing for ing in selected_ingredients if ing.split(':')[0] in recipe_ingredients]
+        num_matched = len(matched_ingredients)
+        total_ingredients = len(recipe_ingredients)
+
+        # Only add recipes where at least 1 ingredient matches
+        if num_matched > 0:
+            ranked_recipes.append({
                 "recipe_name": recipe_name,
                 "recipe_ingredients_amounts": recipe_ingredients,
-                "recipe_steps": recipe_steps  # Send steps back as part of the recipe data
+                "recipe_steps": recipe_steps,
+                "num_matched": num_matched,  # How many ingredients match
+                "total_ingredients": total_ingredients  # Total ingredients in the recipe
             })
 
-    return matching_recipes
+    # Sort recipes by number of matched ingredients, descending
+    ranked_recipes.sort(key=lambda x: x['num_matched'], reverse=True)
+
+    return ranked_recipes
 
 if __name__ == '__main__':
     app.run(debug=True)

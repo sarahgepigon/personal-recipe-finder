@@ -28,8 +28,13 @@ input[type="checkbox"] {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
   transition: transform 0.2s ease;
+  margin-bottom: 15px;
 }
 
 .recipe-card:hover {
   transform: scale(1.03);
+}
+
+.text-green-500 {
+  color: #10b981;  /* Tailwind green */
 }
