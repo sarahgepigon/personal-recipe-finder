@@ -1,42 +1,44 @@
-from flask import Flask, jsonify, send_file
+from flask import Flask, jsonify, render_template
 import sqlite3
 import json
 
 app = Flask(__name__)
 
-# Fetch all recipes from the database
-def get_all_recipes():
-    conn = sqlite3.connect('recipe_finder.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT recipe_name, recipe_ingredients_amounts, recipe_steps FROM recipes")
-    recipes = cursor.fetchall()
-    conn.close()
-
-    recipe_list = []
-    for recipe in recipes:
-        recipe_list.append({
-            "recipe_name": recipe[0],
-            "recipe_ingredients_amounts": json.loads(recipe[1]),
-            "recipe_steps": json.loads(recipe[2])
-        })
-    
-    return recipe_list
-
-# Route to serve index.html from the root directory
+# Serve the frontend (index.html)
 @app.route('/')
 def index():
-    return send_file('index.html')
+    return render_template('index.html')
 
-# Route to serve app.js from the root directory
-@app.route('/app.js')
-def serve_js():
-    return send_file('app.js')
+# Ingredients API route
+@app.route('/ingredients', methods=['GET'])
+def ingredients():
+    # Fetch ingredients from the database
+    ingredients = get_all_ingredients_from_db()
+    return jsonify(ingredients)
 
-# API route to get all recipes
-@app.route('/recipes', methods=['GET'])
-def recipes():
-    all_recipes = get_all_recipes()
-    return jsonify(all_recipes)
+# Function to fetch all unique ingredients from the database
+def get_all_ingredients_from_db():
+    # Connect to SQLite database
+    conn = sqlite3.connect('recipe_finder.db')
+    cursor = conn.cursor()
+
+    # Query the 'recipes' table to get the ingredients
+    cursor.execute("SELECT recipe_ingredients_amounts FROM recipes")
+    rows = cursor.fetchall()
+
+    # Close the connection
+    conn.close()
+
+    # Collect all ingredients in a set to avoid duplicates
+    ingredient_set = set()
+
+    for row in rows:
+        # Load the ingredients from the JSON field in the database
+        ingredients = json.loads(row[0])
+        for ingredient, details in ingredients.items():
+            ingredient_set.add(f"{ingredient}: {details['amount']}")
+
+    return list(ingredient_set)
 
 if __name__ == '__main__':
     app.run(debug=True)
