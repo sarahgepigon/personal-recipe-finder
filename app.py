@@ -1,8 +1,38 @@
+import os
 from flask import Flask, jsonify, render_template, request
 import sqlite3
 import json
+from flask_sqlalchemy import SQLAlchemy #added to set up postgresql connection 
 
 app = Flask(__name__)
+
+### BELOW added to set up postgresql connection ###
+
+# Set the PostgreSQL database URL
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('postgresql_username')}:{os.getenv('postgresql_password')}@localhost/recipe_finder"
+
+
+# Disable modification tracking to reduce overhead
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize SQLAlchemy with Flask app
+db = SQLAlchemy(app)
+
+# Define the Recipe model (this maps to the PostgreSQL table)
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_name = db.Column(db.String(100), nullable=False)
+    created_ts = db.Column(db.String(50), nullable=False)
+    updated_ts = db.Column(db.String(50), nullable=False)
+    recipe_ingredients_amounts = db.Column(db.JSON, nullable=False)  # JSON column for ingredients
+    recipe_steps = db.Column(db.JSON, nullable=False)  # JSON column for steps
+
+# Example route to test the setup
+@app.route('/')
+def index():
+    return "Recipe Finder App connected to PostgreSQL!"
+
+# ABOVE added to set up postgresql connection ###
 
 # Serve the frontend (index.html)
 @app.route('/')
