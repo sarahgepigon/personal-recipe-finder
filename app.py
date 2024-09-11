@@ -27,9 +27,9 @@ class Recipe(db.Model):
     recipe_ingredients_amounts = db.Column(db.JSON, nullable=False)  # JSON column for ingredients
     recipe_steps = db.Column(db.JSON, nullable=False)  # JSON column for steps
 
-# Example route to test the setup
-@app.route('/')
-def index():
+# Route for testing PostgreSQL connection (renamed from index to test_db)
+@app.route('/test_db')
+def test_db():
     return "Recipe Finder App connected to PostgreSQL!"
 
 # ABOVE added to set up postgresql connection ###
