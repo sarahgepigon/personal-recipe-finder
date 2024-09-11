@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     recipeCard.classList.add('recipe-card', 'p-4', 'm-4', 'border', 'rounded-lg', 'shadow-lg');
 
                     // Add the logic to change background color for each recipe card
-                    recipeCard.classList.add('bg-blue-200');  // Example color
+                    recipeCard.classList.add('bg-gradient-to-r', 'from-yellow-500', 'via-orange-500', 'to-red-500', 'text-black', 'shadow-lg');  // Apply gradient background and text color
 
                     const recipeName = document.createElement('h2');
                     recipeName.textContent = recipe.recipe_name;
@@ -98,10 +98,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Create a counter for selected ingredients
                     const totalIngredients = recipe.total_ingredients;
                     const matchedIngredients = recipe.num_matched;
-                    const counterText = `${matchedIngredients} out of ${totalIngredients} ingredients matched`;
+                    const counterText = `You have ${matchedIngredients} out of ${totalIngredients} ingredients`;
 
                     const counterDiv = document.createElement('div');
-                    counterDiv.classList.add('text-sm', 'text-green-500', 'mt-2');
+                    counterDiv.classList.add('text-sm', 'text-green-700', 'mt-2');
                     counterDiv.textContent = counterText;
 
                     // Append all elements to the recipe card
@@ -161,10 +161,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const totalIngredients = recipe.total_ingredients;
             const matchedIngredients = selectedIngredients.filter(ingredient => recipe.recipe_ingredients_amounts[ingredient]).length;
-            const counterText = `${matchedIngredients} out of ${totalIngredients} ingredients matched`;
+            // text before ingredients are selected
+            const counterText = `Select ingredients to see if you have the ${totalIngredients} needed for this recipe.`;
 
             const counterDiv = document.createElement('div');
-            counterDiv.classList.add('text-sm', 'text-green-600', 'mt-2');
+            counterDiv.classList.add('text-sm', 'text-orange-400', 'mt-2');
             counterDiv.textContent = counterText;
 
             recipeCard.appendChild(recipeName);
