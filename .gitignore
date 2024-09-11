@@ -3,10 +3,22 @@ venv/
 # 	Database files like .db files can change frequently, and they tend to be binary files, which don't work well with Git's diff and merge functionality. Instead of tracking the .db file, you can track the schema and code that generates the database (database_setup.py), making it easier to collaborate and keep the repository lightweight.
 style copy.css
 *.db
+
+# Dependency directories
+node_modules/
+
+# OS-specific files
 .DS_Store
+
+# Environment variables
 .env
 .env.development
 .env.production
+
+# Compiled CSS
+static/dist/output.css
+
+
 app copy.js
 app copy.py
 helpful_code_snippets.py

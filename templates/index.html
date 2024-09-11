@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Finder</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Link Tailwind CSS compiled in the static directory -->
+    <link href="{{ url_for('static', filename='dist/output.css') }}" rel="stylesheet">
+
+    <!-- Script for interactivity -->
     <script src="/static/app.js" defer></script>
 </head>
-<body class="bg-gray-800 text-white">
+
+<body class="bg-red-950 text-white min-h-screen">
     <div class="container mx-auto p-4">
         <h1 class="text-4xl font-bold mb-4">Recipe Finder</h1>
 
         <h2 class="text-2xl mb-2">Select Ingredients:</h2>
-        <!-- The ingredients will be dynamically inserted here -->
+
+        <!-- The ingredients will be dynamically inserted here by app.js -->
         <div id="ingredients-list" class="mb-4">
             <!-- Ingredients with checkboxes will be dynamically added -->
         </div>
 
         <div class="mt-6">
-            <button id="submit-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button id="submit-button"
+                class="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white py-2 px-5 rounded-lg hover:scale-105 transition-transform">
                 Submit Selection
             </button>
         </div>
 
-        <div id="recipe-container" class="mt-8">
-            <!-- Filtered and ranked recipes will be displayed here -->
+        <!-- Recipe Cards Container - Recipes will be dynamically inserted here -->
+        <div id="recipe-container" class="mt-8 space-y-4">
+            <!-- All recipe cards will be dynamically rendered from the database -->
         </div>
     </div>
 </body>
+
 </html>
