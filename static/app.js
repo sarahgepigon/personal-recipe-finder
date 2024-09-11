@@ -66,17 +66,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const recipeContainer = document.getElementById('recipe-container');
             recipeContainer.innerHTML = '';  // Clear previous results
 
+            // this is nice to have code but my current version has it so that it only includes options for ingredients that are in the provided recipes
             // If no recipes found
-            if (data.length === 0) {
-                recipeContainer.innerHTML = '<p class="text-center text-red-500">No recipes found with the selected ingredients.</p>';
-                return;
-            }
+            // if (data.length === 0) {
+            //     recipeContainer.innerHTML = '<p class="text-center text-red-500">No recipes found with the selected ingredients.</p>';
+            //     return;
+            // }
 
             // Display each recipe with ranking
             data.forEach(recipe => {
                 console.log('Recipe Data:', recipe);  // Debugging: Log the entire recipe data
-                const recipeCard = document.createElement('div');
-                recipeCard.classList.add('recipe-card', 'p-4', 'm-4', 'border', 'rounded-lg', 'shadow-lg');
+                const recipeCardRanked = document.createElement('div');
+                recipeCardRanked.classList.add('recipe-card', 'p-4', 'm-4', 'border', 'rounded-lg', 'shadow-lg');
 
                 const recipeName = document.createElement('h2');
                 recipeName.textContent = recipe.recipe_name;
@@ -118,15 +119,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 counterDiv.textContent = counterText;
 
                 // Append all elements to the recipe card
-                recipeCard.appendChild(recipeName);
-                recipeCard.appendChild(ingredientsTitle);
-                recipeCard.appendChild(ingredientsList);
-                recipeCard.appendChild(stepsTitle);
-                recipeCard.appendChild(stepsList);
-                recipeCard.appendChild(counterDiv);  // Add the counter to the recipe card
+                recipeCardRanked.appendChild(recipeName);
+                recipeCardRanked.appendChild(ingredientsTitle);
+                recipeCardRanked.appendChild(ingredientsList);
+                recipeCardRanked.appendChild(stepsTitle);
+                recipeCardRanked.appendChild(stepsList);
+                recipeCardRanked.appendChild(counterDiv);  // Add the counter to the recipe card
 
                 // Append the card to the main container
-                recipeContainer.appendChild(recipeCard);
+                recipeContainer.appendChild(recipeCardRanked);
             });
         })
         .catch(error => {
@@ -136,7 +137,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to dynamically display recipe cards
     function displayRecipes(recipes, selectedIngredients) {
-        recipeContainer.innerHTML = '';  // Clear previous results
+
+        // debugging - Clear the container once, above in ranking recipes with matching ingredients section
+        // REMOVED recipeContainer.innerHTML = '';  // Clear previous results
 
         const noIngredientsSelected = selectedIngredients.length === 0;
 
@@ -144,15 +147,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const recipeCard = document.createElement('div');
             recipeCard.classList.add('recipe-card', 'p-4', 'm-4', 'border', 'rounded-lg', 'transition-all', 'duration-300');
 
-            if (noIngredientsSelected) {
-                // Old style: Transparent background, white text, white border
-                recipeCard.classList.add('bg-transparent', 'text-white', 'border-white');
-                recipeCard.classList.remove('bg-gradient-to-r', 'from-yellow-500', 'via-orange-500', 'to-red-500', 'text-black', 'shadow-lg');
-            } else {
-                // New style: Gradient background, black text, shadow
-                recipeCard.classList.remove('bg-transparent', 'text-white', 'border-white');
-                recipeCard.classList.add('bg-gradient-to-r', 'from-yellow-500', 'via-orange-500', 'to-red-500', 'text-black', 'shadow-lg');
-            }
+
+            // BELOW ADDED - change gradient background color of selected recipe cards - empty for now
+
+
+
+            // ABOVE ADDED
+
 
             const recipeName = document.createElement('h2');
             recipeName.textContent = recipe.recipe_name;
@@ -185,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const counterText = `${matchedIngredients} out of ${totalIngredients} ingredients matched`;
 
             const counterDiv = document.createElement('div');
-            counterDiv.classList.add('text-sm', 'text-green-500', 'mt-2');
+            counterDiv.classList.add('text-sm', 'text-green-600', 'mt-2');
             counterDiv.textContent = counterText;
 
             recipeCard.appendChild(recipeName);
