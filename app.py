@@ -75,8 +75,8 @@ def get_recipes_from_db():
     formatted_recipes = []
     for recipe in recipes:
         recipe_name = recipe[0]
-        ingredients_json = recipe[1]
-        steps_json = recipe[2]
+        ingredients_json = recipe[1] # Directly access JSON data from PostgreSQL
+        steps_json = recipe[2] # Directly access JSON data from PostgreSQL
 
         # Parse the JSON strings into Python dictionaries
         ingredients = json.loads(ingredients_json)
